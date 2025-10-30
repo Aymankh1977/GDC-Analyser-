@@ -1,0 +1,5 @@
+{
+  "name": "GDC Dental Analyser",
+  "description": "An application to analyze GDC inspection reports, summarize best practices, identify common areas for improvement, and provide text-to-speech functionality for the results.",
+  "requestFramePermissions": []
+}
