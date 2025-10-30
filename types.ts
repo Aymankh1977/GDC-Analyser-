@@ -1,4 +1,3 @@
-
 export interface AnalysisResult {
   bestPractices: string;
   areasForImprovement: string;
@@ -20,6 +19,8 @@ export enum TtsStatus {
 }
 
 export interface ChatMessage {
-  role: 'user' | 'model';
-  text: string;
+  id: string;
+  content: string;
+  role: 'user' | 'assistant';
+  timestamp: Date;
 }

@@ -1,0 +1,38 @@
+// ... (keep all the imports and components exactly the same until the handleSendMessage function)
+
+  const handleSendMessage = async (message: string) => {
+    if (!chatSession) return;
+    setIsChatLoading(true);
+    const userMessage: ChatMessage = { 
+      id: Date.now().toString(),
+      content: message,
+      role: 'user',
+      timestamp: new Date()
+    };
+    const updatedHistory: ChatMessage[] = [...chatHistory, userMessage];
+    setChatHistory(updatedHistory);
+
+    try {
+        const response = await chatSession.sendMessage({ message });
+        const modelResponse: ChatMessage = { 
+          id: (Date.now() + 1).toString(),
+          content: response.text || 'I apologize, but I encountered an issue generating a response.',
+          role: 'assistant',
+          timestamp: new Date()
+        };
+        setChatHistory([...updatedHistory, modelResponse]);
+    } catch(err: any) {
+        const errorMessage: ChatMessage = { 
+          id: (Date.now() + 1).toString(),
+          content: "I'm sorry, I'm having trouble responding right now. This might be due to API limitations. Please try again in a moment.",
+          role: 'assistant',
+          timestamp: new Date()
+        };
+        setChatHistory([...updatedHistory, errorMessage]);
+        console.error("Chat error:", err);
+    } finally {
+        setIsChatLoading(false);
+    }
+  };
+
+// ... (rest of the App.tsx remains the same)

@@ -1,0 +1,106 @@
+// Replace the ChatAssistant component in your App.tsx with this improved version:
+
+// Improved Chat Assistant Component with better formatting
+const ChatAssistant: React.FC<{ messages: ChatMessage[]; onSendMessage: (message: string) => void; isLoading: boolean }> = ({ 
+  messages, onSendMessage, isLoading 
+}) => {
+  const [input, setInput] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages, isLoading]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (input.trim() && !isLoading) {
+      onSendMessage(input.trim());
+      setInput('');
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSubmit(e);
+    }
+  }
+
+  // Function to format the message content with better structure
+  const formatMessageContent = (content: string) => {
+    if (!content) return content;
+    
+    // Convert markdown-like headings to styled elements
+    let formatted = content
+      // Convert ## Headings to styled headings
+      .replace(/##\s+(.+?)(?=\n|$)/g, '<div class="message-heading">$1</div>')
+      // Convert bullet points to styled lists
+      .replace(/•\s+(.+?)(?=\n|$)/g, '<div class="message-bullet">• $1</div>')
+      // Convert numbered lists
+      .replace(/(\d+)\.\s+(.+?)(?=\n|$)/g, '<div class="message-bullet">$1. $2</div>')
+      // Preserve line breaks
+      .replace(/\n/g, '<br>');
+    
+    return { __html: formatted };
+  };
+
+  return (
+    <div className="chat-container">
+      <div className="chat-header">
+        <div className="message-avatar assistant">
+          <SparklesIcon />
+        </div>
+        <h3 className="font-semibold">AI Compliance Assistant</h3>
+      </div>
+      <div className="chat-messages">
+        {messages.map((message, index) => (
+          <div key={message.id || index} className={`message ${message.role === 'user' ? 'user' : 'assistant'}`}>
+            <div className="message-avatar">
+              {message.role === 'user' ? <UserIcon /> : <SparklesIcon />}
+            </div>
+            <div 
+              className="message-content"
+              dangerouslySetInnerHTML={formatMessageContent(message.content)}
+            />
+          </div>
+        ))}
+        {isLoading && (
+          <div className="message assistant">
+            <div className="message-avatar">
+              <SparklesIcon />
+            </div>
+            <div className="message-content flex items-center gap-2">
+              <SpinnerIcon />
+              <span>Analyzing your question...</span>
+            </div>
+          </div>
+        )}
+        <div ref={messagesEndRef} />
+      </div>
+      <div className="chat-input">
+        <form onSubmit={handleSubmit} className="chat-form">
+          <textarea
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyPress}
+            placeholder="Ask about compliance recommendations, implementation steps, or specific guidelines..."
+            className="chat-input-field"
+            rows={1}
+            disabled={isLoading}
+          />
+          <button
+            type="submit"
+            disabled={isLoading || !input.trim()}
+            className="btn btn-primary"
+          >
+            Send
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
