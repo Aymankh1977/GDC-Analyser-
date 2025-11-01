@@ -10,17 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
     "@google/genai": "^0.6.0",
-    "pdfjs-dist": "^4.4.168",
+    "jspdf": "^3.0.3",
     "marked": "^9.1.2",
-    "jspdf": "^2.5.1"
+    "pdfjs-dist": "^4.4.168",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
+    "@types/jspdf": "^2.0.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
-    "@types/jspdf": "^2.5.3",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.2.1",
@@ -28,6 +28,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.6",
     "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "vite": "^7.1.12"
   }
 }
