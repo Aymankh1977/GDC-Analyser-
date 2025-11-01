@@ -14,11 +14,13 @@
     "react-dom": "^18.2.0",
     "@google/genai": "^0.6.0",
     "pdfjs-dist": "^4.4.168",
-    "marked": "^9.1.2"
+    "marked": "^9.1.2",
+    "jspdf": "^2.5.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@types/jspdf": "^2.5.3",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.2.1",
