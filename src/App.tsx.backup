@@ -1,0 +1,6 @@
+import React, { useState, useCallback, useRef, useEffect } from 'react';
+// Import from services instead of having mocks in this file
+import { analyzeDocuments, generateSpecificGuidelines, createChatSession } from './services/geminiService';
+import { AnalysisResult, SpecificGuidelineResult, ChatMessage } from './services/geminiService';
+
+// ... rest of your existing App.tsx code should remain the same

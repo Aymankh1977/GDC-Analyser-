@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { marked } from 'marked';
 import { SpecificGuidelineResult } from '../types';
@@ -10,44 +9,72 @@ interface SpecificGuidelineCardProps {
 }
 
 const Section: React.FC<{ title: string; content: string }> = ({ title, content }) => {
-  const sanitizedHtml = content ? marked(content) : '';
+  const renderContent = () => {
+    if (!content) {
+      return <p className="text-slate-500 italic">No content available</p>;
+    }
+
+    try {
+      const sanitizedHtml = marked(content);
+      return (
+        <div 
+          className="prose prose-sm max-w-none text-slate-700 leading-relaxed
+                     prose-headings:text-slate-800 prose-headings:font-semibold
+                     prose-p:mb-3 prose-p:leading-6
+                     prose-ul:my-3 prose-li:my-1
+                     prose-strong:text-slate-800 prose-strong:font-semibold
+                     dark:prose-invert"
+          dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
+        />
+      );
+    } catch (error) {
+      console.error('Markdown rendering error:', error);
+      return <div className="text-slate-700 whitespace-pre-wrap leading-relaxed">{content}</div>;
+    }
+  };
+
   return (
-    <div>
-      <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2 border-b-2 border-gray-200 dark:border-gray-700 pb-1">{title}</h3>
-      <div 
-        className="prose prose-sm sm:prose-base max-w-none text-gray-600 dark:text-gray-300 dark:prose-invert"
-        dangerouslySetInnerHTML={{ __html: sanitizedHtml }}
-      />
+    <div className="mb-6 last:mb-0">
+      <h3 className="text-lg font-semibold text-slate-800 mb-3 pb-2 border-b border-slate-200 flex items-center">
+        <div className="w-1.5 h-1.5 bg-blue-400 rounded-full mr-2"></div>
+        {title}
+      </h3>
+      <div className="pl-4">
+        {renderContent()}
+      </div>
     </div>
-  )
+  );
 };
 
 const SpecificGuidelineCard: React.FC<SpecificGuidelineCardProps> = ({ guidelines, onDownloadPdf }) => {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sm:p-8 space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-gray-200 dark:border-gray-700 pb-4 mb-4">
-        <div>
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-                Specific Guidelines Report
+    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-5 border-b border-slate-200">
+        <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-slate-800 mb-1">
+              Specific Guidelines Report
             </h2>
-            <p className="text-md text-gray-500 dark:text-gray-400">
-                For Program: <span className="font-semibold">{guidelines.programName}</span>
+            <p className="text-slate-600">
+              Program: <span className="font-semibold text-slate-800">{guidelines.programName}</span>
             </p>
+          </div>
+          <button
+            onClick={onDownloadPdf}
+            className="flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-5 rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+          >
+            <DownloadIcon className="w-4 h-4" />
+            Download PDF
+          </button>
         </div>
-        <button
-          onClick={onDownloadPdf}
-          className="flex items-center justify-center gap-2 bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800 transition-all duration-300"
-        >
-          <DownloadIcon className="w-5 h-5" />
-          Download as PDF
-        </button>
       </div>
 
-      <Section title="Executive Summary" content={guidelines.executiveSummary} />
-      <Section title="Identified Strengths" content={guidelines.strengths} />
-      <Section title="Areas for Improvement" content={guidelines.areasForImprovement} />
-      <Section title="Actionable Recommendations" content={guidelines.recommendations} />
-
+      <div className="p-6 space-y-6">
+        <Section title="Executive Summary" content={guidelines.executiveSummary} />
+        <Section title="Identified Strengths" content={guidelines.strengths} />
+        <Section title="Areas for Improvement" content={guidelines.areasForImprovement} />
+        <Section title="Actionable Recommendations" content={guidelines.recommendations} />
+      </div>
     </div>
   );
 };
